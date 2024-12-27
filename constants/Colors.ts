@@ -1,19 +1,28 @@
-const tintColorLight = '#2f95dc';
-const tintColorDark = '#fff';
+import { ColorSchemeName } from "react-native"
+
+type Color = {
+  text: string
+  background: string
+  tint: string
+  tabIconDefault: string
+  tabIconSelected: string
+}
+
+type Theme = Record<Exclude<ColorSchemeName, null | undefined>, Color>;
 
 export default {
   light: {
     text: '#000',
     background: '#fff',
-    tint: tintColorLight,
+    tint: '#F54244',
     tabIconDefault: '#ccc',
-    tabIconSelected: tintColorLight,
+    tabIconSelected: '#F54244',
   },
   dark: {
     text: '#fff',
     background: '#000',
-    tint: tintColorDark,
+    tint: '#F54244',
     tabIconDefault: '#ccc',
-    tabIconSelected: tintColorDark,
+    tabIconSelected: '#F54244',
   },
-};
+} as Theme;

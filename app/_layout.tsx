@@ -1,44 +1,56 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import { SQLiteProvider, openDatabaseSync } from "expo-sqlite/next";
+import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
+
 import { useColorScheme } from '@/components/useColorScheme';
+import { DATABASE_NAME } from '@/constants/Database';
+
+import migrations from '@/drizzle/migrations';
+import { Image } from 'react-native';
 
 export {
-  // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+import * as ImagePicker from 'expo-image-picker';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+export const unstable_settings = { initialRouteName: '(tabs)' };
+
 SplashScreen.preventAutoHideAsync();
 
+const expoDB = openDatabaseSync(DATABASE_NAME, { enableChangeListener: true });
+const db = drizzle(expoDB)
+
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  const [loadedFont, errorFont] = useFonts({
+    SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+  const { success, error } = useMigrations(db, migrations);
 
   useEffect(() => {
-    if (loaded) {
+    if (errorFont || error) throw errorFont;
+  }, [errorFont, error]);
+
+  useEffect(() => {
+    if (loadedFont && success) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loadedFont, success]);
 
-  if (!loaded) {
+  if (!loadedFont || !success) {
     return null;
   }
 
@@ -49,11 +61,17 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <SQLiteProvider databaseName={DATABASE_NAME}>
+      <ActionSheetProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{
+              headerShown: false
+            }} />
+            <Stack.Screen name="detalhes/[id]" options={{ presentation: 'modal' }} />
+          </Stack>
+        </ThemeProvider>
+      </ActionSheetProvider>
+    </SQLiteProvider>
   );
 }

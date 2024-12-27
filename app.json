@@ -1,36 +1,69 @@
 {
   "expo": {
-    "name": "refukids",
+    "name": "Refukids",
+    "owner": "refugiolifestyle",
     "slug": "refukids",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "refukids",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "br.com.arefugio.refukids",
+      "splash": {
+        "backgroundColor": "#ffffff",
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
+        "dark": {
+          "backgroundColor": "#000000",
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "splash": {
+        "backgroundColor": "#ffffff",
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
+        "dark": {
+          "backgroundColor": "#000000",
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain"
+        }
+      },
+      "package": "br.com.arefugio.refukids"
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "output": "static"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permitir que $(PRODUCT_NAME) acesse suas fotos",
+          "cameraPermission": "Permitir que $(PRODUCT_NAME) acesse sua câmera",
+          "microphonePermission": "Permitir que $(PRODUCT_NAME) acesse seu microfone"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e5c2157b-c605-4de2-b74d-149ab54bdee0"
+      }
     }
   }
 }

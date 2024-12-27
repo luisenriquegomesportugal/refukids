@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1723823683042,
+      "tag": "0000_chief_wildside",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1724010927058,
+      "tag": "0001_many_hellfire_club",
+      "breakpoints": true
+    }
+  ]
+}
